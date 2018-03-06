@@ -62,7 +62,7 @@
     <Compile Include="MyObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomPermutator.cs" />
+    <Compile Include="Permutator.cs" />
     <Compile Include="ResultData.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

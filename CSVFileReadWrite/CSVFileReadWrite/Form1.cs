@@ -33,22 +33,70 @@ namespace CSVFileReadWrite
             int generationCounter = 1;
             while(generationCounter < MAX_COUNTER_VALUE)
             {
-                int[] tmp = RandomPermutator.GetRandomPermutation(bestIndexesArray);
-
-                
+                int[] tmp = Permutator.GetRandomPermutation(bestIndexesArray);
                 int tmpCost = CountCost(tmp);
-                //Debug.Write("tmpCost  = " + tmpCost + " ");
                 int mainCost = CountCost(bestIndexesArray);
-                //Debug.WriteLine("mainCost = " + mainCost);
                 if (tmpCost < mainCost)
                     Array.Copy(tmp, bestIndexesArray, arraySize);
 
                 excel.AddCellToWorksheetIntoColumnsAB(generationCounter++, CountCost(bestIndexesArray));
-                
-                //generationCounter, 
             }
 
-            //Debug.WriteLine("Cost = " + CountCost(bestIndexesArray));
+            #region Show result
+            string bestResult = "";
+
+            foreach (var item in bestIndexesArray)
+            {
+                bestResult += item.ToString() + "; ";
+            }
+
+            textBoxTotalCost.Text = bestResult;
+            #endregion
+        }
+
+        public void GreedyPermutationAlgorythm()
+        {
+            #region Define data
+            int arraySize = dataFileReader.myObject.Dimension;
+            int[] bestIndexesArray = new int[arraySize];
+            for (int i = 0; i < arraySize; i++)
+            {
+                bestIndexesArray[i] = i;
+            }
+
+            bestIndexesArray = Permutator.GetRandomPermutation(bestIndexesArray);
+            ExcelWorker excel = new ExcelWorker("Greedy alg");
+            #endregion
+
+
+            //create random permtation as base
+
+            for (int i = 0; i < arraySize; i++)
+            {
+                for (int j = 0; j < arraySize; j++)
+                {
+                    //swap
+                    Permutator.Swap(i , j);
+
+                //count
+                //save to log
+                }
+            }
+
+
+
+
+            int generationCounter = 1;
+            while (generationCounter < MAX_COUNTER_VALUE)
+            {
+                int[] tmp = Permutator.GetRandomPermutation(bestIndexesArray);
+                int tmpCost = CountCost(tmp);
+                int mainCost = CountCost(bestIndexesArray);
+                if (tmpCost < mainCost)
+                    Array.Copy(tmp, bestIndexesArray, arraySize);
+
+                excel.AddCellToWorksheetIntoColumnsAB(generationCounter++, CountCost(bestIndexesArray));
+            }
 
             #region Show result
             string bestResult = "";
