@@ -6,7 +6,7 @@ namespace CSVFileReadWrite
 {
     public partial class FormMain : Form
     {
-        readonly int MAX_COUNTER_VALUE = 1000000;
+        readonly int MAX_COUNTER_VALUE = 1000;
         DataFileReader dataFileReader;
         public FormMain()
         {
@@ -27,9 +27,11 @@ namespace CSVFileReadWrite
             {
                 bestIndexesArray[i] = i;
             }
-            
-            int generationCounter = 0;
-            while(generationCounter < MAX_COUNTER_VALUE + 1)
+
+            ExcelWorker excel = new ExcelWorker("Random alg");
+
+            int generationCounter = 1;
+            while(generationCounter < MAX_COUNTER_VALUE)
             {
                 int[] tmp = RandomPermutator.GetRandomPermutation(bestIndexesArray);
 
@@ -41,11 +43,14 @@ namespace CSVFileReadWrite
                 if (tmpCost < mainCost)
                     Array.Copy(tmp, bestIndexesArray, arraySize);
 
-                generationCounter++;
+                excel.AddCellToWorksheetIntoColumnsAB(generationCounter++, CountCost(bestIndexesArray));
+                
+                //generationCounter, 
             }
-            
-            Debug.WriteLine("Cost = " + CountCost(bestIndexesArray));
 
+            //Debug.WriteLine("Cost = " + CountCost(bestIndexesArray));
+
+            #region Show result
             string bestResult = "";
 
             foreach (var item in bestIndexesArray)
@@ -54,6 +59,7 @@ namespace CSVFileReadWrite
             }
 
             textBoxTotalCost.Text = bestResult;
+            #endregion
         }
 
         public int CountCost(int[] array)

@@ -12,41 +12,51 @@ namespace CSVFileReadWrite
         public readonly int GENERATION_NUMBER_INDEX = 0;
         public readonly int BEST_RATING_INDEX = 1;
         public readonly int GRADE_AVERAGE_INDEX = 2;
-        public readonly int WORST_RATING_INDEX = 3; 
+        public readonly int WORST_RATING_INDEX = 3;
+
+        public readonly int FIRST_INDEX_IN_EXCEL_COLUMN = 0;
+        public readonly int COLUMN_A_INDEX = 0;
+        public readonly int COLUMN_B_INDEX = 1;
+        public readonly int COLUMN_C_INDEX = 2;
+
+        public readonly String DEFAULT_FILE_NAME = "newdoc.xls";
+        public readonly String DEFAULT_WORKSHEET_NAME = "First Sheet";
+
+        int rowCounterA;
+        int rowCounterB;
+        int rowCounterC;
+
+        //we will work only with one workbook and worksheet
+        Workbook workbook;
+        Worksheet worksheet;
+
+        String nameOfFile;
+
+        public ExcelWorker(string fileName)
+        {
+            //create new xls file
+            nameOfFile = $"{fileName}.xls";
+            SameConstructorActions(nameOfFile);
+        }
 
         public ExcelWorker()
         {
             //create new xls file
-            string file = "newdoc.xls";
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = new Worksheet("First Sheet");
-            worksheet.Cells[2, 0] = new Cell(9999999);
-            worksheet.Cells[3, 3] = new Cell((decimal)3.45);
-            worksheet.Cells[2, 2] = new Cell("Text string");
-            worksheet.Cells[2, 4] = new Cell("Second string");
-            worksheet.Cells[5, 5] = new Cell(5);
+            nameOfFile = DEFAULT_FILE_NAME;
+            SameConstructorActions(nameOfFile);
+        }
+
+        private void SameConstructorActions(string fileName)
+        {
+            workbook = new Workbook();
+            worksheet = new Worksheet(DEFAULT_WORKSHEET_NAME);
+
             workbook.Worksheets.Add(worksheet);
-            workbook.Save(file);
+            Save();
 
-            // open xls file
-            Workbook book = Workbook.Load(file);
-            Worksheet sheet = book.Worksheets[0];
-
-            // traverse cells
-            //foreach (Pair, Cell > cell in sheet.Cells)
-            //{
-            //    dgvCells[cell.Left.Right, cell.Left.Left].Value = cell.Right.Value;
-            //}
-
-            // traverse rows by Index
-            for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
-            {
-                Row row = sheet.Cells.GetRow(rowIndex);
-                for (int colIndex = row.FirstColIndex; colIndex <= row.LastColIndex; colIndex++)
-                {
-                    Cell cell = row.GetCell(colIndex);
-                }
-            }
+            rowCounterA = FIRST_INDEX_IN_EXCEL_COLUMN;
+            rowCounterB = FIRST_INDEX_IN_EXCEL_COLUMN;
+            rowCounterC = FIRST_INDEX_IN_EXCEL_COLUMN;
         }
 
         /// <summary>
@@ -55,14 +65,24 @@ namespace CSVFileReadWrite
         /// <param name="x">row index</param>
         /// <param name="y">column index</param>
         /// <param name=""></param>
-        public void AddCellToWorksheet<T>(int x, int y, T dataValue, Worksheet worksheet)
+        public void AddCellToWorksheet<T>(int x, int y, T dataValue)
         {
             worksheet.Cells[x, y] = new Cell(dataValue);
         }
 
-        public void Method()
+        /// <summary>
+        /// Add Cell To Worksheet into Columns A, B
+        /// </summary>
+        public void AddCellToWorksheetIntoColumnsAB(int generationNumber, int bestCost)
         {
+            AddCellToWorksheet(rowCounterA++, COLUMN_A_INDEX, generationNumber);
+            AddCellToWorksheet(rowCounterB++, COLUMN_B_INDEX, bestCost);
+            Save();
+        }
 
+        private void Save()
+        {
+            workbook.Save(nameOfFile);
         }
     }
 }
