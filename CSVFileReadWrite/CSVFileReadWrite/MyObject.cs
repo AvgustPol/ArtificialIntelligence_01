@@ -59,6 +59,9 @@ namespace CSVFileReadWrite
                     index++;
                 }
             }
+
+            StaticMatrixObject.distanceMatrix = distanceMatrix;
+            StaticMatrixObject.flowMatrix = flowMatrix;
         }
         
         public int GetFlow(int i, int j)

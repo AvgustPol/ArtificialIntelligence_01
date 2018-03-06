@@ -64,17 +64,19 @@ namespace CSVFileReadWrite
                 bestIndexesArray[i] = i;
             }
 
+            //create random permtation as base
             bestIndexesArray = Permutator.GetRandomPermutation(bestIndexesArray);
             ExcelWorker excel = new ExcelWorker("Greedy alg");
             #endregion
 
-
-            //create random permtation as base
-
+            
             for (int i = 0; i < arraySize; i++)
             {
                 for (int j = 0; j < arraySize; j++)
                 {
+                    int[] tmp = new int[arraySize];
+                    Array.Copy(bestIndexesArray, tmp, arraySize);
+
                     //swap
                     Permutator.Swap(i , j);
 
@@ -122,6 +124,6 @@ namespace CSVFileReadWrite
             }
             return result;
         }
-
+        
     }
 }
