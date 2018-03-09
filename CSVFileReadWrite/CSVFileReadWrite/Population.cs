@@ -59,6 +59,10 @@ namespace CSVFileReadWrite
             {
                 int randomIndex1 = random.Next(POPULATION_SIZE - 1);
                 int randomIndex2 = random.Next(POPULATION_SIZE - 1);
+                while (randomIndex1 == randomIndex2)
+                {
+                    randomIndex2 = random.Next(POPULATION_SIZE - 1);
+                }
 
                 //we are looking for the smalles cost. 
                 if (individuals.ElementAt(randomIndex1).Cost > individuals.ElementAt(randomIndex2).Cost)
@@ -73,14 +77,14 @@ namespace CSVFileReadWrite
             individuals = tmpIndividuals;
         }
 
-        private void TODOnameMethod()
+        private void CreateNextPopulationCircle()
         {
             DoTournamentSelection();
             //DO_HYBRIDIZATION();
             DoMutation();
             SaveBest();
 
-            TODOnameMethod();
+            CreateNextPopulationCircle();
         }
 
         private void DoMutation()
