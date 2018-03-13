@@ -11,7 +11,6 @@ namespace CSVFileReadWrite
         public int Cost { get; set; }
         public int[] Permutation { get; set; }
         //PermutationDimension = Permutation.Length
-        public int PermutationDimension { get; set; }
         
     }
 }

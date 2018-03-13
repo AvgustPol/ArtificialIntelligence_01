@@ -28,6 +28,7 @@ namespace CSVFileReadWrite
                 bestIndexesArray[i] = i;
             }
 
+            // TODO - delete magic numbers 
             ExcelWorker excel = new ExcelWorker("Random alg");
 
             int generationCounter = 1;
@@ -54,6 +55,7 @@ namespace CSVFileReadWrite
             #endregion
         }
 
+        /*
         public void GreedyPermutationAlgorythm()
         {
             #region Define data
@@ -110,7 +112,8 @@ namespace CSVFileReadWrite
 
             textBoxTotalCost.Text = bestResult;
             #endregion
-        }
+        } 
+        */
 
         public int CountCost(int[] array)
         {
@@ -124,6 +127,12 @@ namespace CSVFileReadWrite
             }
             return result;
         }
-        
+
+        private void buttonGA_Click(object sender, EventArgs e)
+        {
+            Population population = new Population(StaticMatrixObject.Dimension);
+
+            population.RunAlgorythmWithCounterCondition();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace CSVFileReadWrite
 {
     static class StaticMatrixObject
     {
+        static public int Dimension { get; set; }
         static public int[,] distanceMatrix;
         static public int[,] flowMatrix;
 

@@ -24,3 +24,16 @@ D:\Anton\Обучение\Szt. Inż\Szt. Inż\Lab01\CSVFileReadWrite\CSVFileRead
 D:\Anton\Обучение\Szt. Inż\Szt. Inż\Lab01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.csproj.CoreCompileInputs.cache
 D:\Anton\Обучение\Szt. Inż\Szt. Inż\Lab01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.exe
 D:\Anton\Обучение\Szt. Inż\Szt. Inż\Lab01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.pdb
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.csprojResolveAssemblyReference.cache
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.FormMain.resources
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.Properties.Resources.resources
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.csproj.GenerateResource.Cache
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.csproj.CoreCompileInputs.cache
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.exe
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.pdb
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CSVFileReadWrite.exe.config
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CSVFileReadWrite.exe
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CSVFileReadWrite.pdb
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CsvHelper.dll
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\ExcelLibrary.dll
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CsvHelper.xml

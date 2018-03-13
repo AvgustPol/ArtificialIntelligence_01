@@ -60,6 +60,7 @@ namespace CSVFileReadWrite
                 }
             }
 
+            StaticMatrixObject.Dimension = dimension;
             StaticMatrixObject.distanceMatrix = distanceMatrix;
             StaticMatrixObject.flowMatrix = flowMatrix;
         }
