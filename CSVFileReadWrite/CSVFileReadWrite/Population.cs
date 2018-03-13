@@ -187,7 +187,7 @@ namespace CSVFileReadWrite
         private void CreateNextPopulationCircle()
         {
             DoTournamentSelection();
-            DoHybridization();
+            DoHybridization(); // krzyrzowa
             DoMutation();
             SaveBest();
         }
