@@ -8,12 +8,12 @@ namespace CSVFileReadWrite
 {
     class Population
     {
-        string[] tmp;
+        Random random;
 
         readonly int COUNTER_STOP_CONDITION = 1000; // количество итараций 
         readonly int TIMER_STOP_CONDITION = 5000; // время в милисикундах 
 
-        readonly int POPULATION_SIZE = 100;
+        readonly int POPULATION_SIZE = 10;
         
         readonly int HYBRIDIZATION_PROBABILITY = 20; // x% 
         readonly int MUTATION_PROBABILITY = 10; // x%  
@@ -25,6 +25,7 @@ namespace CSVFileReadWrite
 
         public Population(int dimension)
         {
+            random = new Random((int)DateTime.UtcNow.Ticks);
             Dimension = dimension;
             individuals = new List<Individual>(POPULATION_SIZE);
             for (int i = 0; i < POPULATION_SIZE; i++)
@@ -52,8 +53,6 @@ namespace CSVFileReadWrite
             {
                 individuals.ElementAt(i).Permutation = Permutator.GetRandomPermutation(defaultArray);
             }
-
-            int stop = 1;
         }
 
         private void CountCostForAllIndividuals()
@@ -68,7 +67,6 @@ namespace CSVFileReadWrite
         private void DoTournamentSelection()
         {
             List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-            Random random = new Random();
             
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
@@ -88,6 +86,88 @@ namespace CSVFileReadWrite
                     tmpIndividuals.Add(individuals.ElementAt(randomIndex1));
                 }
             }
+            individuals = tmpIndividuals;
+        }
+
+        private void DoMultiTournamentSelection(int individualsNumber)
+        {
+            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
+
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                #region Create random indexes 
+                int[] randomIndexes = new int[individualsNumber];
+                for (int z = 0; z < individualsNumber; z++)
+                {
+                    randomIndexes[z] = random.Next(POPULATION_SIZE - 1);
+                }
+                #endregion
+
+                #region Create tmp list of individuals (by random indexes)
+                List<Individual> tmpTournamentIndividuals = new List<Individual>();
+                foreach (var item in randomIndexes)
+                {
+                    tmpTournamentIndividuals.Add(individuals.ElementAt(item));
+                }
+                #endregion
+
+                #region Find best in tmp list
+                Individual tmpBest = tmpTournamentIndividuals.First();
+
+                foreach (var item in tmpTournamentIndividuals)
+                {
+                    if (item.Cost < tmpBest.Cost)
+                        tmpBest = item;
+                }
+                #endregion
+
+                tmpIndividuals.Add(tmpBest);
+                
+            }
+            individuals = tmpIndividuals;
+        }
+
+        public class RuletkaPobability
+        {
+            public int Index { get; set; }
+            public decimal Probability { get; set; }
+            public RuletkaPobability(int index, decimal probability)
+            {
+                Index = index;
+                Probability = probability;
+            }
+        }
+        
+        private void DoRuletkaSelection()
+        {
+            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
+            List<RuletkaPobability> ruletkaList = new List<RuletkaPobability>();
+            decimal costSum = 0;
+            int counter = 0;
+            foreach (var item in individuals)
+            {
+                costSum += (decimal)(1 / item.Cost);
+            }
+            foreach (var item in individuals)
+            {
+                ruletkaList.Add(new RuletkaPobability(counter++, (decimal)(item.Cost / costSum)));
+            }
+
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                bool found = false;
+                while(!found)
+                {
+                    int randomProbability = random.Next(MAX_PROBABILITY);
+                    int randomElement = random.Next(POPULATION_SIZE);
+                    if(ruletkaList.ElementAt(randomElement).Probability > randomProbability)
+                    {
+                        found = true;
+                        tmpIndividuals.Add(individuals.ElementAt(randomElement));
+                    }
+                }
+            }
+
             individuals = tmpIndividuals;
         }
 
@@ -115,19 +195,19 @@ namespace CSVFileReadWrite
         private void DoHybridization()
         {
             #region Select pivot
-            //int pivotIndex = SelectRandomPivot();
+            int pivotIndex = SelectRandomPivot();
             //or at middle :
-            int pivotIndex = Dimension / 2;
+            //int pivotIndex = Dimension / 2;
             #endregion
             // я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
             // зачем ломать , а потом чинить, если можно сразу не ломать ? :)
             CreateNewIndividuals(pivotIndex);
         }
 
+        
+
         private void CreateNewIndividuals(int pivot)
         {
-            Random random = new Random();
-
             int halfPopulation = POPULATION_SIZE / 2;
             for (int i = 0; i < halfPopulation; i += 2)
             {
@@ -169,7 +249,6 @@ namespace CSVFileReadWrite
 
         private int SelectRandomPivot()
         {
-            Random random = new Random();
             int randomPivot = random.Next(1, Dimension - 2);
             return randomPivot;
         }
@@ -178,7 +257,6 @@ namespace CSVFileReadWrite
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Random random = new Random();
                 int randomNumber = random.Next(MAX_PROBABILITY);
                 
                 if (MUTATION_PROBABILITY > randomNumber)
@@ -197,14 +275,12 @@ namespace CSVFileReadWrite
 
         private void SaveBest()
         {
-            Boolean stillBest = true;
             //check is best still best
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
                 if (BestIndividual.Cost < individuals.ElementAt(i).Cost)
                 {
                     BestIndividual = individuals.ElementAt(i);
-                    stillBest = false;
                 }
             }
         }

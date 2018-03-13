@@ -5,6 +5,8 @@ namespace CSVFileReadWrite
 {
     static class Permutator
     {
+        static Random random = new Random((int)DateTime.Now.Ticks);
+
         public static int[] GetNextGreedyPermutation(int[] originalMatrix)
         {
             // нужно ли создавать tmp ???
@@ -32,10 +34,10 @@ namespace CSVFileReadWrite
 
             return tmp;
         }
-        
+
+
         public static void Shuffle(int[] array)
         {
-            Random random = new Random();
             int n = array.Count();
             while (n > 1)
             {
