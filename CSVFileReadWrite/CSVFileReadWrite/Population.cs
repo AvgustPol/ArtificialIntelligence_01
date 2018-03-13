@@ -8,11 +8,11 @@ namespace CSVFileReadWrite
 {
     class Population
     {
-        readonly int NUMBER_OF_PAIRS_TO_HYBRIDIZATION = 3; // 6 osobnikow
-        readonly int POPULATION_SIZE = 30;
-
-        readonly int HYBRIDIZATION_PROBABILITY = 5; // 5%  
-        readonly int MAX_HYBRIDIZATION_PROBABILITY = 100; // 100%
+        readonly int POPULATION_SIZE = 100;
+        
+        readonly int HYBRIDIZATION_PROBABILITY = 10; // 10%
+        readonly int MUTATION_PROBABILITY = 5; // 5%  
+        readonly int MAX_PROBABILITY = 100; // 100%
 
         List<Individual> individuals;
         public Individual BestIndividual { get; set; }
@@ -80,11 +80,73 @@ namespace CSVFileReadWrite
         private void CreateNextPopulationCircle()
         {
             DoTournamentSelection();
-            //DO_HYBRIDIZATION();
+            DoHybridization();
             DoMutation();
             SaveBest();
 
             CreateNextPopulationCircle();
+        }
+
+        private void DoHybridization()
+        {
+            #region Select pivot
+            int pivotIndex = SelectRandomPivot();
+            //or at middle :
+            //int pivotIndex = Dimension / 2;
+            #endregion
+            // я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
+            // зачем ломать , а потом чинить, если можно сразу не ломать ? :)
+            CreateNewIndividuals(pivotIndex);
+        }
+
+        private void CreateNewIndividuals(int pivot)
+        {
+            Random random = new Random();
+
+            int halfPopulation = POPULATION_SIZE / 2;
+            for (int i = 0; i < halfPopulation; i += 2)
+            {
+                int randomNumber = random.Next(MAX_PROBABILITY);
+                if (HYBRIDIZATION_PROBABILITY > randomNumber)
+                {
+                    CreateNewPairIndividuals(pivot, individuals.ElementAt(i), individuals.ElementAt(i + 1));
+                }
+            }
+        }
+
+        private void CreateNewPairIndividuals(int indexTo, Individual firstIndividual, Individual secondIndividual)
+        {
+            for (int i = 0; i < indexTo; i++)
+            {
+                if (WasHere(firstIndividual.Permutation, secondIndividual.Permutation.ElementAt(i)))
+                {
+                    Permutator.SwapBeetweenArrays(firstIndividual.Permutation, secondIndividual.Permutation, i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks , if value was in array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private bool WasHere(int[] array, int value)
+        {
+            bool wasHere = false;
+            foreach (var item in array)
+            {
+                if (item == value)
+                    wasHere = true;
+            }
+            return wasHere;
+        }
+
+        private int SelectRandomPivot()
+        {
+            Random random = new Random();
+            int randomPivot = random.Next(1, Dimension - 2);
+            return randomPivot;
         }
 
         private void DoMutation()
@@ -92,9 +154,9 @@ namespace CSVFileReadWrite
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
                 Random random = new Random();
-                int randomNumber = random.Next(MAX_HYBRIDIZATION_PROBABILITY);
+                int randomNumber = random.Next(MAX_PROBABILITY);
                 
-                if (HYBRIDIZATION_PROBABILITY > randomNumber)
+                if (MUTATION_PROBABILITY > randomNumber)
                 {
                     int randomIndex1 = random.Next(Dimension);
                     int randomIndex2 = random.Next(Dimension);

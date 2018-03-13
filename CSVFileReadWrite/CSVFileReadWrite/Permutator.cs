@@ -46,5 +46,12 @@ namespace CSVFileReadWrite
                 array[n] = temp;
             }
         }
+
+        public static void SwapBeetweenArrays(int[] array1, int[] array2, int index)
+        {
+            int temp = array1[index];
+            array1[index] = array2[index];
+            array2[index] = temp;
+        }
     }
 }
