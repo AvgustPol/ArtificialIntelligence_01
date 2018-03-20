@@ -1,9 +1,5 @@
-﻿using CsvHelper;
-using ExcelLibrary.SpreadSheet;
+﻿using ExcelLibrary.SpreadSheet;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace CSVFileReadWrite
 {
@@ -18,6 +14,7 @@ namespace CSVFileReadWrite
         public readonly int COLUMN_A_INDEX = 0;
         public readonly int COLUMN_B_INDEX = 1;
         public readonly int COLUMN_C_INDEX = 2;
+        public readonly int COLUMN_D_INDEX = 3;
 
         public readonly String DEFAULT_FILE_NAME = "newdoc.xls";
         public readonly String DEFAULT_WORKSHEET_NAME = "First Sheet";
@@ -25,6 +22,7 @@ namespace CSVFileReadWrite
         int rowCounterA;
         int rowCounterB;
         int rowCounterC;
+        int rowCounterD;
 
         //we will work only with one workbook and worksheet
         Workbook workbook;
@@ -57,6 +55,7 @@ namespace CSVFileReadWrite
             rowCounterA = FIRST_INDEX_IN_EXCEL_COLUMN;
             rowCounterB = FIRST_INDEX_IN_EXCEL_COLUMN;
             rowCounterC = FIRST_INDEX_IN_EXCEL_COLUMN;
+            rowCounterD = FIRST_INDEX_IN_EXCEL_COLUMN;
         }
 
         /// <summary>
@@ -77,6 +76,24 @@ namespace CSVFileReadWrite
         {
             AddCellToWorksheet(rowCounterA++, COLUMN_A_INDEX, generationNumber);
             AddCellToWorksheet(rowCounterB++, COLUMN_B_INDEX, bestCost);
+            Save();
+        }
+
+        public void AddCellToWorksheetIntoColumnsABCD<T>(T generationNumber, T bestCost, T averageCost, T worstCost)
+        {
+            AddCellToWorksheet(rowCounterA++, COLUMN_A_INDEX, generationNumber);
+            AddCellToWorksheet(rowCounterB++, COLUMN_B_INDEX, bestCost);
+            AddCellToWorksheet(rowCounterC++, COLUMN_C_INDEX, averageCost);
+            AddCellToWorksheet(rowCounterD++, COLUMN_D_INDEX, worstCost);
+            Save();
+        }
+
+        public void AddStringCellToWorksheetIntoColumnsABCD(string generationNumber, string bestCost, string averageCost, string worstCost)
+        {
+            AddCellToWorksheet(rowCounterA++, COLUMN_A_INDEX, generationNumber);
+            AddCellToWorksheet(rowCounterB++, COLUMN_B_INDEX, bestCost);
+            AddCellToWorksheet(rowCounterC++, COLUMN_C_INDEX, averageCost);
+            AddCellToWorksheet(rowCounterD++, COLUMN_D_INDEX, worstCost);
             Save();
         }
 

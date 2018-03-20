@@ -37,3 +37,4 @@ D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialInt
 D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CsvHelper.dll
 D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\ExcelLibrary.dll
 D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\bin\Debug\CsvHelper.xml
+D:\Google drive\обучение\6 sem\Szt. Inż\Lab01 with github\ArtificialIntelligence_01\CSVFileReadWrite\CSVFileReadWrite\obj\Debug\CSVFileReadWrite.csproj.CopyComplete

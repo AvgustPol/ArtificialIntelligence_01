@@ -5,7 +5,7 @@ namespace CSVFileReadWrite
 {
     static class Permutator
     {
-        static Random random = new Random((int)DateTime.Now.Ticks);
+        static Random random = new Random(((int)DateTime.Now.Ticks) ^ 2);
 
         public static int[] GetNextGreedyPermutation(int[] originalMatrix)
         {

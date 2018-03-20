@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSVFileReadWrite
 {
@@ -10,14 +8,17 @@ namespace CSVFileReadWrite
     {
         Random random;
 
-        readonly int COUNTER_STOP_CONDITION = 1000; // количество итараций 
-        readonly int TIMER_STOP_CONDITION = 5000; // время в милисикундах 
+        readonly int GENRATION_NUMBERS_STOP_CONDITION = 101; // количество итараций 
+        //readonly int TIMER_STOP_CONDITION = 5000; // время в милисикундах 
 
-        readonly int POPULATION_SIZE = 10;
-        
-        readonly int HYBRIDIZATION_PROBABILITY = 20; // x% 
-        readonly int MUTATION_PROBABILITY = 10; // x%  
+        readonly int POPULATION_SIZE = 100;
+        readonly int NUMBER_OF_TOURNAMENT_PARTICIPANTS = 5;
+
+        readonly int HYBRIDIZATION_PROBABILITY = 70; // x% 
+        readonly int MUTATION_PROBABILITY = 1; // x%  
         readonly int MAX_PROBABILITY = 100; // 100%
+
+        readonly int NOT_FOUND_INDEX = -1;
 
         List<Individual> individuals;
         public Individual BestIndividual { get; set; }
@@ -32,7 +33,8 @@ namespace CSVFileReadWrite
             {
                 individuals.Add(new Individual());
             }
-            BestIndividual = new Individual();
+            //first 
+            BestIndividual = individuals.ElementAt(0);
 
             CreateNewRandomPopulation();
             CountCostForAllIndividuals();
@@ -89,17 +91,17 @@ namespace CSVFileReadWrite
             individuals = tmpIndividuals;
         }
 
-        private void DoMultiTournamentSelection(int individualsNumber)
+        private void DoMultiTournamentSelection(int participantsNumber)
         {
             List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
 
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
                 #region Create random indexes 
-                int[] randomIndexes = new int[individualsNumber];
-                for (int z = 0; z < individualsNumber; z++)
+                int[] randomIndexes = new int[participantsNumber];
+                for (int z = 0; z < participantsNumber; z++)
                 {
-                    randomIndexes[z] = random.Next(POPULATION_SIZE - 1);
+                    randomIndexes[z] = random.Next(POPULATION_SIZE);
                 }
                 #endregion
 
@@ -107,7 +109,7 @@ namespace CSVFileReadWrite
                 List<Individual> tmpTournamentIndividuals = new List<Individual>();
                 foreach (var item in randomIndexes)
                 {
-                    tmpTournamentIndividuals.Add(individuals.ElementAt(item));
+                    tmpTournamentIndividuals.Add((Individual)individuals.ElementAt(item).Clone());
                 }
                 #endregion
 
@@ -124,7 +126,7 @@ namespace CSVFileReadWrite
                 tmpIndividuals.Add(tmpBest);
                 
             }
-            individuals = tmpIndividuals;
+            individuals = new List<Individual>(tmpIndividuals);
         }
 
         public class RuletkaPobability
@@ -146,7 +148,8 @@ namespace CSVFileReadWrite
             int counter = 0;
             foreach (var item in individuals)
             {
-                costSum += (decimal)(1 / item.Cost);
+                
+                costSum += Decimal.Parse(item.Cost.ToString());
             }
             foreach (var item in individuals)
             {
@@ -171,27 +174,30 @@ namespace CSVFileReadWrite
             individuals = tmpIndividuals;
         }
 
-        public void RunAlgorythmWithCounterCondition()
+        public AverageCounter RunAlgorythmWithCounterCondition()
         {
             int counter = 0;
-            ExcelWorker excel = new ExcelWorker("GA alg");
-
-            while (COUNTER_STOP_CONDITION > counter)
+            
+            AverageCounter averageCounter = new AverageCounter();
+            while (GENRATION_NUMBERS_STOP_CONDITION > counter)
             {
                 CreateNextPopulationCircle();
                 
-                excel.AddCellToWorksheetIntoColumnsAB(counter++, BestIndividual.Cost);
+                averageCounter.SaveData(counter++, BestIndividual.Cost, CountAverageCost(), FindWorstCost());
             }
+
+            return averageCounter;
         }
 
         private void CreateNextPopulationCircle()
         {
-            DoTournamentSelection();
+            //DoMultiTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
+            DoRuletkaSelection();
             DoHybridization(); // krzyrzowa
             DoMutation();
             SaveBest();
         }
-
+        
         private void DoHybridization()
         {
             #region Select pivot
@@ -204,8 +210,6 @@ namespace CSVFileReadWrite
             CreateNewIndividuals(pivotIndex);
         }
 
-        
-
         private void CreateNewIndividuals(int pivot)
         {
             int halfPopulation = POPULATION_SIZE / 2;
@@ -216,6 +220,10 @@ namespace CSVFileReadWrite
                 {
                     CreateNewPairIndividuals(pivot, individuals.ElementAt(i), individuals.ElementAt(i + 1));
                 }
+            #region Recount cost for changed permutation
+                individuals.ElementAt(i).Cost = CostCounter.CountCost(individuals.ElementAt(i).Permutation);
+                individuals.ElementAt(i + 1).Cost = CostCounter.CountCost(individuals.ElementAt(i + 1).Permutation);
+            #endregion
             }
         }
 
@@ -223,11 +231,28 @@ namespace CSVFileReadWrite
         {
             for (int i = 0; i < indexTo; i++)
             {
-                if (WasHere(firstIndividual.Permutation, secondIndividual.Permutation.ElementAt(i)))
+                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.Permutation.ElementAt(i);
+                int[] hybridizationTmpArray = new int[indexTo];
+                Array.Copy(firstIndividual.Permutation, hybridizationTmpArray, indexTo);
+                if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
                 {
+                    Permutator.Swap(firstIndividual.Permutation, i , FindThisNumberInArray(firstIndividual.Permutation, secondIndividualPermutationElementAtCurrentIndexI));
                     Permutator.SwapBeetweenArrays(firstIndividual.Permutation, secondIndividual.Permutation, i);
                 }
             }
+        }
+
+        private int FindThisNumberInArray(int[] permutation, int value)
+        {
+            int premutationSize = permutation.Length;
+            for (int i = 0; i < premutationSize; i++)
+            {
+                if (permutation[i] == value)
+                {
+                    return i;
+                }
+            }
+            return NOT_FOUND_INDEX;
         }
 
         /// <summary>
@@ -238,13 +263,12 @@ namespace CSVFileReadWrite
         /// <returns></returns>
         private bool WasHere(int[] array, int value)
         {
-            bool wasHere = false;
             foreach (var item in array)
             {
                 if (item == value)
-                    wasHere = true;
+                    return true;
             }
-            return wasHere;
+            return false;
         }
 
         private int SelectRandomPivot()
@@ -257,19 +281,23 @@ namespace CSVFileReadWrite
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                int randomNumber = random.Next(MAX_PROBABILITY);
-                
-                if (MUTATION_PROBABILITY > randomNumber)
+                Individual tmp = individuals.ElementAt(i);
+                for (int j = 0; j < Dimension; j++)
                 {
-                    int randomIndex1 = random.Next(Dimension);
-                    int randomIndex2 = random.Next(Dimension);
-                    while (randomIndex1 == randomIndex2)
+                    int randomNumber = random.Next(MAX_PROBABILITY);
+                    if (MUTATION_PROBABILITY > randomNumber)
                     {
-                        randomIndex2 = random.Next(Dimension);
+                        int randomIndex = random.Next(Dimension);
+                        while (j == randomIndex)
+                        {
+                            randomIndex = random.Next(Dimension);
+                        }
+                        //MUTATE
+                        Permutator.Swap(tmp.Permutation, j, randomIndex);
+                        tmp.Cost = CostCounter.CountCost(tmp.Permutation);
                     }
-                    //MUTATE
-                    Permutator.Swap(individuals.ElementAt(i).Permutation, randomIndex1, randomIndex2);
                 }
+                
             }
         }
 
@@ -278,11 +306,35 @@ namespace CSVFileReadWrite
             //check is best still best
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                if (BestIndividual.Cost < individuals.ElementAt(i).Cost)
+                if (BestIndividual.Cost > individuals.ElementAt(i).Cost)
                 {
-                    BestIndividual = individuals.ElementAt(i);
+                    BestIndividual = (Individual)individuals.ElementAt(i).Clone();
                 }
             }
         }
+
+        public double CountAverageCost()
+        {
+            int sumCost = 0;
+            foreach (var item in individuals)
+            {
+                sumCost += item.Cost;
+            }
+            return sumCost / POPULATION_SIZE;
+        }
+
+        public int FindWorstCost()
+        {
+            int worstCost = individuals.FirstOrDefault().Cost;
+            foreach (var item in individuals)
+            {
+                if (worstCost < item.Cost)
+                {
+                    worstCost = item.Cost;
+                }
+            }
+            return worstCost;
+        }
+
     }
 }
