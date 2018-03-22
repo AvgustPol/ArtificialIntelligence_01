@@ -10,7 +10,7 @@ namespace CSVFileReadWrite
 
         readonly int GENRATION_NUMBERS_STOP_CONDITION = 101; // количество итараций 
         //readonly int TIMER_STOP_CONDITION = 5000; // время в милисикундах 
-
+        
         readonly int POPULATION_SIZE = 100;
         readonly int NUMBER_OF_TOURNAMENT_PARTICIPANTS = 5;
 
